@@ -1,0 +1,95 @@
+---
+title: "Final Project"
+format: html
+---
+
+### Exploratory Data Analysis
+
+First we can run some exploratory data analysis
+
+multixikkubearutr
+
+
+```{r}
+
+library(readr)
+library(tidyverse)
+library(janitor)
+library(pheatmap)
+library(corrplot)
+music_dataset <- read_csv("music_dataset.csv")
+
+
+ggplot(aes)
+
+```
+
+
+```{r}
+tidy_music_data <- clean_names(music_dataset)
+
+View(tidy_music_data)
+```
+
+
+#Variables
+
+#MAybe create a map of all the variables to see if any are correlated with each other then look closer at pais of varibles
+
+
+```{r}
+predictor_variables <-
+  select(tidy_music_data, -c("song","artist", "streams", "daily_streams", "genre", "release_year"))
+  
+```
+
+
+#heatmap
+```{r}
+View(predictor_variables)
+pheatmap(predictor_variables, scale = "none")
+
+```
+
+
+
+```{r}
+cor_matrix <- cor(predictor_variables)
+View(cor_matrix)
+```
+
+```{r}
+pheatmap(cor_matrix, scale = "none")
+```
+```{r}
+corrplot(cor_matrix,method="pie")
+```
+```{r}
+corrplot(cor_matrix,method="shade")
+
+```
+
+```{r}
+high_correlations <- cor_matrix[abs(cor_matrix) > 0.5]
+View(high)
+```
+```{r}
+cor_matrix <- cor(predictor_variables, use = "complete.obs")
+corrplot(cor_matrix, method = "color")
+```
+
+
+Our variables seem to not have any correlations with each other
+# Danceability + Energy
+
+Since these two variables might be simlar, we might want to first investigate these variables to capture any multicolinnarity. These vairables seem to be numeric and continuos, 
+
+
+
+
+
+
+
+
+
+
