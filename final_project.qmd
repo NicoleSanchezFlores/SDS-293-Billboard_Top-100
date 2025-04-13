@@ -9,7 +9,6 @@ First we can run some exploratory data analysis
 
 multixikkubearutr
 
-
 ```{r}
 
 library(readr)
@@ -17,13 +16,13 @@ library(tidyverse)
 library(janitor)
 library(pheatmap)
 library(corrplot)
+library(ggplot2)
 music_dataset <- read_csv("music_dataset.csv")
 
 
-ggplot(aes)
+#ggplot(aes)
 
 ```
-
 
 ```{r}
 tidy_music_data <- clean_names(music_dataset)
@@ -31,11 +30,9 @@ tidy_music_data <- clean_names(music_dataset)
 View(tidy_music_data)
 ```
 
-
 #Variables
 
 #MAybe create a map of all the variables to see if any are correlated with each other then look closer at pais of varibles
-
 
 ```{r}
 predictor_variables <-
@@ -43,15 +40,13 @@ predictor_variables <-
   
 ```
 
-
 #heatmap
+
 ```{r}
 View(predictor_variables)
 pheatmap(predictor_variables, scale = "none")
 
 ```
-
-
 
 ```{r}
 cor_matrix <- cor(predictor_variables)
@@ -61,9 +56,11 @@ View(cor_matrix)
 ```{r}
 pheatmap(cor_matrix, scale = "none")
 ```
+
 ```{r}
 corrplot(cor_matrix,method="pie")
 ```
+
 ```{r}
 corrplot(cor_matrix,method="shade")
 
@@ -73,23 +70,46 @@ corrplot(cor_matrix,method="shade")
 high_correlations <- cor_matrix[abs(cor_matrix) > 0.5]
 View(high)
 ```
+
 ```{r}
 cor_matrix <- cor(predictor_variables, use = "complete.obs")
 corrplot(cor_matrix, method = "color")
 ```
 
+Our variables seem to not have any correlations with each other \# Danceability + Energy
 
-Our variables seem to not have any correlations with each other
-# Danceability + Energy
+Since these two variables might be simlar, we might want to first investigate these variables to capture any multicolinnarity. These vairables seem to be numeric and continuos,
 
-Since these two variables might be simlar, we might want to first investigate these variables to capture any multicolinnarity. These vairables seem to be numeric and continuos, 
+## Part II: Describe the Data 
 
+**Data Set:** Billboard Top Songs
 
+-   Filename: music_dataset.csv
 
+**Date:**
 
+-   The data set is being actively updated as of March 19, 2025.
 
+**Summary:**
 
+Our data was obtained from the Kaggle data set called "Billboard Top Songs" by Samay Ashar. This data set contains 5,000 song observations which were generated from both Spotify charts and artificially written musciality descriptions. The author of this data generated the observed song information to determine what factors can influence a song's weekly Billboard ranking or TikTok virality. To help in answering these questions the data includes 13 variables such as song, artist, streams, daily streams, genre, release year, peak position, weeks on chart, lyrics sentiment, tiktok virality, danceability, acousticness, and energy.
 
+```{r}
+glimpse(tidy_music_data)
+```
 
+**Further Description of Variables:**
 
-
+1.  **song**: character data - the title of the song.
+2.  **artist**: character data - the name of the associated artist.
+3.  **streams**: discrete numerical - total number of streams a song has across all platforms.
+4.  **daily_streams**: discrete numerical - the average number of streams the song receives daily.
+5.  **genre**: character - the song's genre.
+6.  **release_year**: discrete numerical - the year the song was released.
+7.  **peak_position**: discrete numerical - highest billboard or spotify chart position.
+8.  **weeks_on_chart**: discrete numerical - total weeks on the chart.
+9.  **lyrics_sentiment**: discrete numerical - sentiment analysis of lyrics from -1 to +1.
+10. **tik_tok_virality**: discrete numerical - popularity score of a song from 0 to 100.
+11. **danceability**: discrete numerical - how danceable the song is from 0 to 1.
+12. **acousticness**: discrete numerical - level of acoustics used from 0 to 1.
+13. **energy**: discrete numerical - level of energy of song from 0 to 1.
