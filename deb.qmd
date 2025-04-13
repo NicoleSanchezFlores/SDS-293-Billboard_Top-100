@@ -1,0 +1,48 @@
+```{r}
+library(tidyverse)
+library(readr)
+
+billboard <- read.csv("music_dataset.csv")
+view(billboard)
+
+df <- as.tibble(billboard)
+```
+
+```{r}
+# Amount of each artists in the dataset 
+artist_sum <- billboard %>%
+  group_by(Artist) %>%
+  summarise(n = n()) %>%
+  mutate(percent = (n / 4850)*100) %>%
+  arrange(desc(n)) %>%
+  slice(c(1:5, (n() - 4):n())) %>% # cleaner way to slice top and bottom 5
+  mutate(rank_group = if_else(row_number() <= 5, "Top 5", "Bottom 5"))
+
+ggplot(artist_sum, aes(x = Artist, y = n, fill = rank_group)) +
+  geom_bar(width = 1, stat = "identity") +
+  facet_wrap(~rank_group) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+
+artist_sum %>%
+  filter(rank_group == "Top 5") %>%
+  ggplot(aes(x = Artist, y = n, fill = rank_group)) +
+  geom_bar(stat = "identity") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  labs(title = "Top 5 Artists", x = "Artist", y = "Count", fill = "Rank")
+
+artist_sum %>%
+  filter(rank_group == "Bottom 5") %>%
+  ggplot(aes(x = Artist, y = n, fill = rank_group)) +
+  geom_bar(stat = "identity", fill = "Blue") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  labs(title = "Bottom 5 Artists", x = "Artist", y = "Count", fill = "Rank")
+
+billboard %>%
+  filter(Song == "Track 10330")
+
+billboard %>%
+  group_by(Song) %>%
+  summarise(n = n())
+
+```
