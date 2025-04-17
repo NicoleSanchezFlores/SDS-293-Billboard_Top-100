@@ -80,7 +80,7 @@ Our variables seem to not have any correlations with each other \# Danceability 
 
 Since these two variables might be simlar, we might want to first investigate these variables to capture any multicolinnarity. These vairables seem to be numeric and continuos,
 
-## Part II: Describe the Data 
+## Part II: Describe the Data
 
 **Data Set:** Billboard Top Songs
 
@@ -108,8 +108,8 @@ glimpse(tidy_music_data)
 6.  **release_year**: discrete numerical - the year the song was released.
 7.  **peak_position**: discrete numerical - highest billboard or spotify chart position.
 8.  **weeks_on_chart**: discrete numerical - total weeks on the chart.
-9.  **lyrics_sentiment**: discrete numerical - sentiment analysis of lyrics from -1 to +1.
+9.  **lyrics_sentiment**: continuous numerical - sentiment analysis of lyrics from -1 to +1.
 10. **tik_tok_virality**: discrete numerical - popularity score of a song from 0 to 100.
-11. **danceability**: discrete numerical - how danceable the song is from 0 to 1.
-12. **acousticness**: discrete numerical - level of acoustics used from 0 to 1.
-13. **energy**: discrete numerical - level of energy of song from 0 to 1.
+11. **danceability**: continuous numerical - how danceable the song is from 0 to 1.
+12. **acousticness**: continuous numerical - level of acoustics used from 0 to 1.
+13. **energy**: continuous numerical - level of energy of song from 0 to 1.
