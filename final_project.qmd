@@ -7,10 +7,7 @@ format: html
 
 First we can run some exploratory data analysis
 
-multixikkubearutr
-
 ```{r}
-
 library(readr)
 library(tidyverse)
 library(janitor)
@@ -18,21 +15,55 @@ library(pheatmap)
 library(corrplot)
 library(ggplot2)
 music_dataset <- read_csv("music_dataset.csv")
-
-
 #ggplot(aes)
-
 ```
 
-```{r}
+```{r, echo=FALSE}
+# Cleaning up the dataset names 
 tidy_music_data <- clean_names(music_dataset)
 
+# Viewing the data
 View(tidy_music_data)
 ```
 
+```{r, echo=FALSE}
+# Percentage + sum that each artist takes up the data
+artist_sum <- tidy_music_data %>%
+  group_by(artist) %>%
+  summarise(n = n()) %>%
+  mutate(percent = (n / 4850)*100) %>%
+  arrange(desc(n))
+
+# bar graph of the artiists + sum amount
+ggplot(artist_sum, aes(x = reorder(artist, n), y = n)) +
+  geom_bar(stat = "identity", fill = "steelblue") +
+  coord_flip() +
+  labs(title = "All Artists by Count", x = "Artist", y = "Count")
+```
+
+```{r}
+# Top 5 Artists
+top_5 <- tidy_music_data %>%
+  group_by(artist) %>%
+  summarise(n = n()) %>%
+  arrange(desc(n)) %>%
+  slice(1:5) 
+
+# Bottom 5 
+bottom_5 <- tidy_music_data %>%
+  group_by(artist) %>%
+  summarise(n = n()) %>%
+  arrange(desc(n)) %>%
+  slice(15:20) 
+
+ranks
+```
+
+
+
 #Variables
 
-#MAybe create a map of all the variables to see if any are correlated with each other then look closer at pais of varibles
+#Maybe create a map of all the variables to see if any are correlated with each other then look closer at pais of varibles
 
 ```{r}
 predictor_variables <-

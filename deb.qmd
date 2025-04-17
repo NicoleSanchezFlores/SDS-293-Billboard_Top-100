@@ -45,4 +45,28 @@ billboard %>%
   group_by(Song) %>%
   summarise(n = n())
 
+
+gen_sum <- billboard %>%
+  group_by(Genre) %>%
+  summarise(n = n()) 
+
+top_bottom_artists <- billboard %>%
+  count(Artist, sort = TRUE) %>%
+  slice(c(1:5, (n() - 4):n())) %>%
+  mutate(rank_group = if_else(row_number() <= 5, "Top 5", "Bottom 5"))
+
+  
+billboard_ranked <- billboard %>%
+  inner_join(top_bottom_artists, by = "Artist")
+
+top5_peaks <- billboard_ranked %>%
+  filter(rank_group %in% "Top 5")
+
+%>%
+  group_by(Artist, peak.position) %>%
+  summarise(n = n(), .groups = "drop")
+
 ```
+
+
+
