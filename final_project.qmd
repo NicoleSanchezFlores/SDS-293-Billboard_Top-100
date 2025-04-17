@@ -40,7 +40,7 @@ ggplot(artist_sum, aes(x = reorder(artist, n), y = n)) +
   coord_flip() +
   labs(title = "All Artists by Count", x = "Artist", y = "Count")
 ```
-
+Above in [ADD FIGURE] displays the artists list along with their track amount in the data set. We can see the top 5 artists are jay Zenith, Bass Surge, Horizon Flow, Celestial Harmony and Luna Nova. The bottom 5 artists are Samantha Lee, Aurora Soundwave ElectroPulse, Urban Rhapsody, and Retro Resonance. All artists has at leats 215 tracks and up. 
 ```{r}
 # Top 5 Artists
 top_5 <- tidy_music_data %>%
@@ -54,9 +54,16 @@ bottom_5 <- tidy_music_data %>%
   group_by(artist) %>%
   summarise(n = n()) %>%
   arrange(desc(n)) %>%
-  slice(15:20) 
+  slice(16:20) 
 
-ranks
+ranks <- top_5 %>%
+  full_join(bottom_5)  %>%
+  arrange(desc(n))
+
+ggplot(ranks, aes(x = artist, y = n)) +
+  geom_bar(stat = "identity", fill = "steelblue") +
+  coord_flip() +
+  labs(title = "Top & Bottom 5 Artists", x = "Artist", y = "Count")
 ```
 
 
@@ -144,3 +151,35 @@ glimpse(tidy_music_data)
 11. **danceability**: discrete numerical - how danceable the song is from 0 to 1.
 12. **acousticness**: discrete numerical - level of acoustics used from 0 to 1.
 13. **energy**: discrete numerical - level of energy of song from 0 to 1.
+
+Thinking abt model selections: 
+
+We still have to think about those types of variables we want to use, and the goal of this project and 
+
+- supervised apporach, and we can use the peak position 
+- unsupervised is vetter for exploratory, is there clumping happening and this can gives us clues that something is prob not linear, how do these varibales influence herarcheal custering 
+- Luclfideous distance,weve got one subgrroup of people na dhow do we characterise, is there some edvidence of a bias, and filtering
+
+Lienar regression, 
+
+make a new group 
+
+discrininate anaylysis 
+
+Look into more EDA 
+
+pairs plot, looking at some correlation (this was done), K ean abd hearcargcia distance, shape is important
+
+waht do those grups understand 
+
+go a couple of different ways, are there any leading indicators, what is the smallest model I can use to get tik tok viraity 
+
+*k means*
+
+*heararchiam clustering *
+
+some combiantion of number of week and what positin thay are on the chart, 
+
+FP 1
+clean the data and created a model
+can include EDA and bad models
