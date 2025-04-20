@@ -14,6 +14,8 @@ library(janitor)
 library(pheatmap)
 library(corrplot)
 library(ggplot2)
+library(moderndive)
+library(stats)
 music_dataset <- read_csv("music_dataset.csv")
 #ggplot(aes)
 ```
@@ -156,11 +158,11 @@ Thinking abt model selections:
 
 We still have to think about those types of variables we want to use, and the goal of this project and 
 
-- supervised apporach, and we can use the peak position 
-- unsupervised is vetter for exploratory, is there clumping happening and this can gives us clues that something is prob not linear, how do these varibales influence herarcheal custering 
-- Luclfideous distance,weve got one subgrroup of people na dhow do we characterise, is there some edvidence of a bias, and filtering
+- supervised approach, and we can use the peak position 
+- unsupervised is better for exploratory, is there clumping happening and this can gives us clues that something is prob not linear, how do these variables influence heirarchical clustering 
+- Luclfideous distance,we've got one subgroup of people and how do we characterize, is there some evidence of a bias, and filtering
 
-Lienar regression, 
+Linear regression, 
 
 make a new group 
 
@@ -168,17 +170,17 @@ discrininate anaylysis
 
 Look into more EDA 
 
-pairs plot, looking at some correlation (this was done), K ean abd hearcargcia distance, shape is important
+pairs plot, looking at some correlation (this was done), K means and hearcargcia distance, shape is important
 
-waht do those grups understand 
+what do those groups understand 
 
-go a couple of different ways, are there any leading indicators, what is the smallest model I can use to get tik tok viraity 
+go a couple of different ways, are there any leading indicators, what is the smallest model I can use to get tik-tok virality 
 
 *k means*
 
 *heararchiam clustering *
 
-some combiantion of number of week and what positin thay are on the chart, 
+some combination of number of week and what position they are on the chart, 
 
 FP 1
 clean the data and created a model
@@ -195,6 +197,26 @@ tidy_music_data <- tidy_music_data %>%
 
 ```
 
+One supervised learning technique that we want to use is the logistic regression to estimate the probability of events occurring specific to our data set.
+```{r}
+#using tidy music data set, creating a logistic regression to predict the occurrance of a song entering the top 10
+
+#model creation
+danceability_log_model <- glm(top10 ~ danceability, data = tidy_music_data, family = "binomial")
+
+acousticness_log_model <- glm(top10 ~ acousticness, data = tidy_music_data, family = "binomial")
+
+energy_log_model <- glm(top10 ~ energy, data = tidy_music_data, family = "binomial")
+#get summaries
+summary(danceability_log_model)
+summary(acousticness_log_model)
+summary(energy_log_model)
+#plot the model
+
+###each model's coefficents are statistically significant and have comparable AIC values.
+#each slope value is relatively weak other than energy. This means that of the three predictors which are probabilities, songs with the highest 'energy' will be the best predictor of whether a song will make it onto the top 10 list
+#next step, separate for training testing
+```
 
 
 # Random Forest
