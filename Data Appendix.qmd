@@ -1,0 +1,91 @@
+---
+title: "FP0_Data Appendix"
+author: Nicole Sanchez Flores, Vanessa Pliego, Debora Camacho, Kimberly By Goytia, Ari Cross
+date: "`r format(Sys.Date(), '%B %d, %Y')`"
+format: 
+  pdf:
+    pdf-engine: xelatex
+    mainfont: "Times New Roman"
+    fontsize: 11pt
+    margin: 1in
+class: "CSC/SDS 293"
+---
+**Class:** CSC/SDS 293
+
+# Part I: Load the Data
+```{r}
+library(readr)
+library(tidyverse)
+library(janitor)
+library(pheatmap)
+library(ggplot2)
+music_dataset <- read_csv("music_dataset.csv")
+
+```
+
+```{r}
+tidy_music_data <- clean_names(music_dataset)
+
+```
+
+# Part II: Describe the Data 
+
+**Data Set:** Billboard Top Songs
+
+-   Filename: music_dataset.csv
+
+**Date:**
+
+-   The data set is being actively updated as of March 19, 2025.
+
+**Summary:**
+
+Our data was obtained from the Kaggle data set called "Billboard Top Songs" by Samay Ashar. This data set contains 5,000 song observations which were generated from both Spotify charts and artificially written musciality descriptions. The author of this data generated the observed song information to determine what factors can influence a song's weekly Billboard ranking or TikTok virality. To help in answering these questions the data includes 13 variables such as song, artist, streams, daily streams, genre, release year, peak position, weeks on chart, lyrics sentiment, tiktok virality, danceability, acousticness, and energy.
+
+```{r}
+glimpse(tidy_music_data)
+```
+
+**Further Description of Variables:**
+
+1.  **song**: character data - the title of the song.
+2.  **artist**: character data - the name of the associated artist.
+3.  **streams**: discrete numerical - total number of streams a song has across all platforms.
+4.  **daily_streams**: discrete numerical - the average number of streams the song receives daily.
+5.  **genre**: character - the song's genre.
+6.  **release_year**: discrete numerical - the year the song was released.
+7.  **peak_position**: discrete numerical - highest billboard or spotify chart position.
+8.  **weeks_on_chart**: discrete numerical - total weeks on the chart.
+9.  **lyrics_sentiment**: discrete numerical - sentiment analysis of lyrics from -1 to +1.
+10. **tik_tok_virality**: discrete numerical - popularity score of a song from 0 to 100.
+11. **danceability**: discrete numerical - how danceable the song is from 0 to 1.
+12. **acousticness**: discrete numerical - level of acoustics used from 0 to 1.
+13. **energy**: discrete numerical - level of energy of song from 0 to 1.
+
+# Part III:  Pressing Issues
+Recap: “Big Questions” for your Final Project 
+
+## What question is the project trying to answer? 
+For our final project, we hope to better understand what factors might be influencing a song or artist to be on the Billboard Top 100 in order to build a model that can predict whether an artist or song will be on the Top 100. Based on these findings, we would also like to analyze any trends within artists, perhaps any similarities in the style of music, that coincide with their position on the billboard. 
+
+## How have people answered it / gotten around it before?
+Previously, other students in universities have done a descriptive analysis and classification study on this issue, but we have not seen the usage of machine learning to build a model to further predict whether a song or an artist will be on the Billboard Top 100. 
+
+## What new idea does this project offer that improves on the old way of doing things? 
+This project aims to provide a model that can predict whether a song/artist will be on the Billboard Top 100 based on certain features that the song possesses, like danceability, its popularity on tik tok, etc. This may help aspiring artists explore the possibility of whether or not their song can land on the billboard top 100.  
+
+## What are the (major) building blocks the project will need to be successful? 
+There are 7 major building blocks that this project will need to have. 1. Data Preparation 2. Exploratory Data Analysis 3. Model Selection 4.Model Training, 5. Model Evaluation, 6. Model Deployment. 7. Interpretation/Reviewing Results. This is to make sure that we include each step and we can properly making our model.
+
+
+
+## Which ones are in place already, and which ones are still under construction or TBD? 
+The steps that are already in place include reading in and loading the dataset that we will be using, cleaning the data up, and finally we have begun data exploration to better understand the dataset. The steps that are still under construction include model selection, model training, model evaluation, and model deployment.
+
+
+## Are there any potential roadblocks?
+One potential roadblock is the problem of multicollinearity. One challenge that we suspect is that the “Energy” variable will highly correlate with the “Danceability” Variable. One possibility is that high-energy songs might be more danceable which might impact the placement of the songs on the billboard top 100. Another potential roadblock is that we might not have enough data for our model to be able to generalize across other data which can be problematic in terms of its usability and success. We have noticed that many of the artists within this dataset are not as known or popular (some are also artificially made by the owner of the dataset) which could be hard to draw conclusions from and apply to bigger and more known artists. 
+
+
+
+
