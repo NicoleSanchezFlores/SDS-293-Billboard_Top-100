@@ -184,3 +184,22 @@ FP 1
 clean the data and created a model
 can include EDA and bad models
 
+
+### Supervised Learning Models
+# We can make it into classificition, are they in top 10 or not
+
+```{r}
+tidy_music_data <- tidy_music_data %>%
+  mutate(top10 = ifelse(peak_position <= 10, 1, 0)) %>%
+  mutate(top10 = as.factor(top10))  # make it a factor for classification
+
+```
+
+
+
+# Random Forest
+
+# Logistic Regression
+
+# Gradient Boosting
+
