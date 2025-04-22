@@ -197,8 +197,196 @@ tidy_music_data <- tidy_music_data %>%
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # Random Forest
 
+We're taking these out because these are not really important to our model also, peak_position will be highly correlated wit
+```{r}
+tidy_music_data <- tidy_music_data[,!names(tidy_music_data) %in% c("song", "artist", "peak_position", "daily_streams")]
+```
+
+In this code chunk, we will use Random Forest. We are sepearating our data into a training and testing set. We will use a 80/20 split because we have a relatively big dataset with 4850 rows.
+
+```{r}
+library(randomForest)
+set.seed(100)
+samp <- sample(nrow(tidy_music_data), .80 * nrow(tidy_music_data))
+
+train <- tidy_music_data[samp, ]
+
+test <- tidy_music_data[-samp, ]
+
+#we check the dims
+
+dim(test)
+dim(train)
+```
+
+
+Now we are going to make our model, this chunk means to make a random forest model predicting if the song will be in top 10 using the rest of the columns in the data set with the training data.
+```{r}
+
+model <- randomForest(top10 ~ ., data = train, ntree = 1000, mtry = 5)
+
+model
+```
+
+In this step we make our confusion matrix this hows how well the model performed on the training set. It also elps identify how often it's correctly/incorrectly classifying songs as top 10 or not.
+```{r}
+model$confusion
+```
+
+
+
+Now we use our model on the testing data set, so we can test how it well it generalizes to "new" data. 
+```{r}
+prediction <- predict(model, newdata = test)
+
+table(prediction, test$top10)
+
+prediction
+```
+
+Here we see how the model did on the testing data, we see for accurate predictions over inaccurate predictions.
+```{r}
+results<-cbind(prediction,test$top10)
+
+results
+
+colnames(results)<-c('pred','real')
+
+results<-as.data.frame(results)
+
+
+# Finally, let’s calculate the accuracy of the model
+
+sum(prediction==test$top10) / nrow(test) # The output is as shown below
+```
+It seems that we have aorund .91% accuracy with this model we can extract the variables that may lead to this high accuracy. We can see which variables using the importance() function as well as using the varImpPlot. The varImpPlot 
+
+```{r}
+# Get variable importance
+importance(model)
+
+varImpPlot(model)
+
+```
+
+We can see that in this plot different variables carry different importance. On the x-axis we have MeanDecreaseGini which shows how much each variable improves the purity of the decision trees in the forest. Higher values of MeanDecreaseGini indicates greater importance because For each variable, we track how much it helps reduce impurity on average across all the trees in the forest.The more a variable helps split the data into purer groups, the higher its MeanDecreaseGini.
+
+
+```{r}
+imp <- importance(model)
+top_features <- rownames(imp)[order(imp[, "MeanDecreaseGini"], decreasing = TRUE)[1:5]]
+top_features
+
+```
+
+
+
+```{r}
+library(randomForest)
+library(ggplot2)
+
+imp <- importance(model)
+imp_df <- data.frame(
+  Variable = rownames(imp),
+  MeanDecreaseGini = imp[, "MeanDecreaseGini"]
+)
+
+# Sort by importance
+imp_df <- imp_df[order(imp_df$MeanDecreaseGini), ]
+
+ggplot(imp_df, aes(x = MeanDecreaseGini, y = reorder(Variable, MeanDecreaseGini))) +
+  geom_point(color = "steelblue", size = 3) +
+  labs(title = "Variable Importance",
+       x = "Mean Decrease Gini",
+       y = "Variable") +
+  scale_x_continuous(breaks = seq(0, max(imp_df$MeanDecreaseGini), by = 5)) +  # Tick every 5
+  theme_minimal()
+
+```
+From the plot and from what is shown above, we can see that streams is by far the most important variable, since it has a MeanDecreaseGini of 95.Then we have lyric_sentiment being the next most important variable, since it has a MeanDecreaseGini of around 82%. Danceability and the number of weeks that the song is on the chart are the next most important variables with about 77 MeanDecreaseGini then. Then tiktok virality is next with about 76% MeanDecreaseGini.
+
+On the other hand, variables like genre and release_year show much lower MeanDecreaseGini values, indicating that they contribute relatively little to the model’s ability to classify Top 10 songs accurately. 
+
+The model suggests that emotional tone, how danceable a track is, how long it stays on the charts, and its popularity on TikTok all play a significant role in chart success. Overall, the plot helps us identify which features are most valuable in predicting musical success.
+
+
+
+Next steps: Maybe look into daily streams/streams? pick one instead of other 
 # Logistic Regression
 
 # Gradient Boosting
