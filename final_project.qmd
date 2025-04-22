@@ -1,6 +1,9 @@
 ---
 title: "Final Project"
 format: html
+author: Nicole Sanchez Flores, Vanessa Pliego, Debora Camacho, Kimberly By Goytia, Ari Cross
+date: "`r format(Sys.Date(), '%B %d, %Y')`"
+
 ---
 
 ### Exploratory Data Analysis
@@ -152,37 +155,50 @@ glimpse(tidy_music_data)
 12. **acousticness**: discrete numerical - level of acoustics used from 0 to 1.
 13. **energy**: discrete numerical - level of energy of song from 0 to 1.
 
-Thinking abt model selections: 
 
-We still have to think about those types of variables we want to use, and the goal of this project and 
 
-- supervised apporach, and we can use the peak position 
-- unsupervised is vetter for exploratory, is there clumping happening and this can gives us clues that something is prob not linear, how do these varibales influence herarcheal custering 
-- Luclfideous distance,weve got one subgrroup of people na dhow do we characterise, is there some edvidence of a bias, and filtering
+### Unsupervised Models
 
-Lienar regression, 
 
-make a new group 
+# Hierarchical clustering
+```{r}
+# selecting columns of interest and converting to matrix
+music_data <- tidy_music_data |>
+  select(streams, daily_streams, genre, peak_position, weeks_on_chart,
+         lyrics_sentiment, tik_tok_virality, danceability, acousticness, energy)
 
-discrininate anaylysis 
+music_data$genre <- as.factor(music_data$genre)
 
-Look into more EDA 
+# one-hot encoding genre since it is categorical column
+genre_dummies <- model.matrix(~ genre - 1, data = music_data)
+music_data <- music_data |>
+  select(-genre) |>
+  bind_cols(as.data.frame(genre_dummies))
 
-pairs plot, looking at some correlation (this was done), K ean abd hearcargcia distance, shape is important
+# removing missing values
+music_data <- na.omit(music_data)
+# standardizing features
+music_data <- scale(music_data)
+# tranposing for feature clustering
+music_data <- dist(t(music_data)) 
+# hierarchichal clustering --> complete
+hc <- hclust(music_data, method = "complete")
 
-waht do those grups understand 
 
-go a couple of different ways, are there any leading indicators, what is the smallest model I can use to get tik tok viraity 
+```
 
-*k means*
+```{r}
+plot(hc, main = "Hierarchical Clustering", xlab = "", sub = "", ylab = "Distance")
+rect.hclust(hc, k = 4, border = "red")  
 
-*heararchiam clustering *
+```
 
-some combiantion of number of week and what positin thay are on the chart, 
-
-FP 1
-clean the data and created a model
-can include EDA and bad models
+Findings: 
+- from this plot, we find that genreHouse, genreEDM, and genreR&B cluster tightly with danceability which suggests that these genres are possibly ones that are found to be more danceable. 
+- We also find that acousticness is close to genreJazz and genreSynthwave which makes sense since they are less upbeat/electronic sounds. 
+- Surprisingly, we also see that genreTechno and genreCountry are near lyrics_sentiment which could be further investigated.
+- More importantly, we are finding that streams, genrepop, and peak position cluster which can be a suggestion that popular songs with high streams and peak positions are usually pop songs. This is pretty safe to assume since pop is a very popular genre, and this could be worth further exploring within a model to see if a song being pop influences a song to do better on charts. 
+- another important finding is that weeks on chart and energy cluster which also makes sense since higher energy songs might stay on the charts longer over less energetic songs. 
 
 
 ### Supervised Learning Models
@@ -382,11 +398,11 @@ From the plot and from what is shown above, we can see that streams is by far th
 
 On the other hand, variables like genre and release_year show much lower MeanDecreaseGini values, indicating that they contribute relatively little to the model’s ability to classify Top 10 songs accurately. 
 
-The model suggests that emotional tone, how danceable a track is, how long it stays on the charts, and its popularity on TikTok all play a significant role in chart success. Overall, the plot helps us identify which features are most valuable in predicting musical success.
+The model suggests that emotional tone, how danceable a track is, how long it stays on the charts, and its popularity on TikTok all play a significant role in chart success. Overall, the plot helps us identify which features are most valuable in predicting musical success. 
 
 
 
-Next steps: Maybe look into daily streams/streams? pick one instead of other 
+Next steps: Maybe look into daily streams/streams? pick one instead of other  
 # Logistic Regression
 
 # Gradient Boosting
