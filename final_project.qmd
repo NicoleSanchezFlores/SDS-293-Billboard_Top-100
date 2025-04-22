@@ -26,7 +26,7 @@ music_dataset <- read_csv("music_dataset.csv")
 tidy_music_data <- clean_names(music_dataset)
 
 # Viewing the data
-View(tidy_music_data)
+#View(tidy_music_data)
 ```
 
 ```{r, echo=FALSE}
@@ -437,13 +437,43 @@ summary(energy_log_model)
 summary(integrative_model)
 #plot the model
 # 4. Predict on test data
-train$top10 <- as.character(train$top10)
-test$top10 <- as.character(test$top10)
+#you may need to uncomment the following two lines if running into 'factor' errors
+#train$top10 <- as.character(train$top10)
+#test$top10 <- as.character(test$top10)
 
 test$predicted_prob <- predict(integrative_model, newdata = test, type = "response")
 test$predicted_class <- ifelse(test$predicted_prob > 0.5, 1, 0)
 
 ```
+The logistic regressions were not successful in predicting whether or not the a song would make it to the top 10 based on the logistic model that predicts top 10 status as a function of energy, danceability, and lyrics sentiment. 
 
+When running the terms of the logistic model, none of them showed statistical significance which would point to the reason why the model wasn't able to accurately predict from training data.
 # Gradient Boosting
+```{r}
+#build the model
+library(gbm)
+#set seed
+set.seed(123)
+
+gbm_model <- gbm(
+  formula = top10 ~ ., 
+  data = train, 
+  distribution = "bernoulli", 
+  n.trees = 5000, 
+  interaction.depth = 4, 
+  shrinkage = 0.01, 
+  cv.folds = 5
+)
+```
+
+```{r}
+#evaluate the model
+# Make predictions
+predictions <- predict(gbm_model, newdata = test, n.trees = gbm_model$n.trees)
+
+# Calculate RMSE
+rmse <- sqrt(mean((predictions - test$medv)^2))
+print(paste("RMSE:", round(rmse, 2)))
+
+```
 
