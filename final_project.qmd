@@ -439,8 +439,6 @@ test$top10 <- as.character(test$top10)
 test$predicted_prob <- predict(integrative_model, newdata = test, type = "response")
 test$predicted_class <- ifelse(test$predicted_prob > 0.5, 1, 0)
 
-
-
 ```
 
 # Gradient Boosting
