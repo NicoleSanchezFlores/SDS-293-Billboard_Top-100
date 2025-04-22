@@ -402,7 +402,7 @@ The model suggests that emotional tone, how danceable a track is, how long it st
 
 
 
-Next steps: Maybe look into daily streams/streams? pick one instead of other 
+Next steps: Maybe look into daily streams/streams? pick one instead of other  
 # Logistic Regression
 
 # Gradient Boosting
