@@ -214,7 +214,9 @@ summary(energy_log_model)
 #plot the model
 
 ###each model's coefficents are statistically significant and have comparable AIC values.
-#each slope value is relatively weak other than energy. This means that of the three predictors which are probabilities, songs with the highest 'energy' will be the best predictor of whether a song will make it onto the top 10 list
+
+#each slope value is relatively weak other than energy. This means that of the three predictors which are probabilities, songs with the highest 'energy' will be the best predictor of whether a song will make it onto the top 10 list.
+
 #next step, separate for training testing
 ```
 
