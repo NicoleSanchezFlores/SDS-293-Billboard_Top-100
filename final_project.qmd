@@ -398,7 +398,7 @@ From the plot and from what is shown above, we can see that streams is by far th
 
 On the other hand, variables like genre and release_year show much lower MeanDecreaseGini values, indicating that they contribute relatively little to the model’s ability to classify Top 10 songs accurately. 
 
-The model suggests that emotional tone, how danceable a track is, how long it stays on the charts, and its popularity on TikTok all play a significant role in chart success. Overall, the plot helps us identify which features are most valuable in predicting musical success.
+The model suggests that emotional tone, how danceable a track is, how long it stays on the charts, and its popularity on TikTok all play a significant role in chart success. Overall, the plot helps us identify which features are most valuable in predicting musical success. 
 
 
 
