@@ -157,10 +157,10 @@ glimpse(tidy_music_data)
 
 
 
-### Unsupervised Models
+# Unsupervised Models
 
 
-# Hierarchical clustering
+## Hierarchical clustering
 ```{r}
 # selecting columns of interest and converting to matrix
 music_data <- tidy_music_data |>
@@ -201,6 +201,82 @@ Findings:
 - another important finding is that weeks on chart and energy cluster which also makes sense since higher energy songs might stay on the charts longer over less energetic songs. 
 
 
+## Kmeans Processing
+
+```{r}
+library(tidyverse)
+library(factoextra)
+
+# Kmeans work for numeric values, so you pick the numeric values. 
+# Unsupervised, so we did not add peak.poistion
+
+billboard_numeric <- tidy_music_data %>%
+  select(streams, daily_streams, weeks_on_chart,
+         lyrics_sentiment, tik_tok_virality,
+         danceability, acousticness, energy)
+
+# Scale numeric features
+billboard_scaled <- scale(billboard_numeric)
+
+```
+
+```{r}
+fviz_nbclust(billboard_scaled, kmeans, method = "silhouette")
+
+#Determines the ideal amount of clusters we should create for the kmeans algorithm. The result is 2 
+```
+
+```{r}
+set.seed(3)
+
+km_result <- kmeans(billboard_scaled, centers = 2, nstart = 25)
+
+#Center = the number of clusters made by the user
+#nsstart = 25 random starts to find the best clustering solution 
+```
+
+
+```{r}
+fviz_cluster(km_result, data = billboard_scaled,
+             ellipse.type = "convex",
+             geom = "point",
+             palette = "jco",
+             ggtheme = theme_minimal())
+
+#Shows the clusters that we created.
+```
+
+```{r}
+clusters <- kmeans(billboard_scaled, centers = 2, nstart = 25)
+billboard <- billboard |> mutate(cluster = clusters$cluster)
+billboard |> ggplot(aes(x = Daily.Streams, y = TikTok.Virality, col = as.factor(cluster))) + geom_point()
+```
+
+### Additional kmeans exploration:
+
+```{r}
+billboard_clustered <- tidy %>%
+  filter(complete.cases(streams, daily_streams, weeks_on_chart,
+                        lyrics_sentiment, tik_tok_virality,
+                        danceability, acousticness, energy)) %>%
+  mutate(cluster = factor(km_result$cluster))
+
+```
+
+```{r}
+billboard_clustered %>%
+  group_by(cluster) %>%
+  summarise(across(where(is.numeric), mean, na.rm = TRUE),
+            n = n())
+
+#Shows the center of each cluster.
+```
+
+**Explanation:**
+
+This showed that there is no relationship associated with the variables so the kmeans does not work. It can also have to do with the fact that when clustering there is a lot of overlap between the most optimal cluster amount of 2. Additionally, in the above table, the means are closely similar to each other for each cluster. This might cause issues with create distinct clusters.
+
+
 ### Supervised Learning Models
 # We can make it into classificition, are they in top 10 or not
 
@@ -210,80 +286,6 @@ tidy_music_data <- tidy_music_data %>%
   mutate(top10 = as.factor(top10))  # make it a factor for classification
 
 ```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 # Random Forest
