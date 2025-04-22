@@ -3,7 +3,6 @@ title: "Final Project"
 format: html
 author: Nicole Sanchez Flores, Vanessa Pliego, Debora Camacho, Kimberly By Goytia, Ari Cross
 date: "`r format(Sys.Date(), '%B %d, %Y')`"
-
 ---
 
 ### Exploratory Data Analysis
@@ -43,7 +42,9 @@ ggplot(artist_sum, aes(x = reorder(artist, n), y = n)) +
   coord_flip() +
   labs(title = "All Artists by Count", x = "Artist", y = "Count")
 ```
-Above in [ADD FIGURE] displays the artists list along with their track amount in the data set. We can see the top 5 artists are jay Zenith, Bass Surge, Horizon Flow, Celestial Harmony and Luna Nova. The bottom 5 artists are Samantha Lee, Aurora Soundwave ElectroPulse, Urban Rhapsody, and Retro Resonance. All artists has at leats 215 tracks and up. 
+
+Above in \[ADD FIGURE\] displays the artists list along with their track amount in the data set. We can see the top 5 artists are jay Zenith, Bass Surge, Horizon Flow, Celestial Harmony and Luna Nova. The bottom 5 artists are Samantha Lee, Aurora Soundwave ElectroPulse, Urban Rhapsody, and Retro Resonance. All artists has at leats 215 tracks and up.
+
 ```{r}
 # Top 5 Artists
 top_5 <- tidy_music_data %>%
@@ -68,8 +69,6 @@ ggplot(ranks, aes(x = artist, y = n)) +
   coord_flip() +
   labs(title = "Top & Bottom 5 Artists", x = "Artist", y = "Count")
 ```
-
-
 
 #Variables
 
@@ -155,12 +154,10 @@ glimpse(tidy_music_data)
 12. **acousticness**: discrete numerical - level of acoustics used from 0 to 1.
 13. **energy**: discrete numerical - level of energy of song from 0 to 1.
 
-
-
 # Unsupervised Models
 
-
 ## Hierarchical clustering
+
 ```{r}
 # selecting columns of interest and converting to matrix
 music_data <- tidy_music_data |>
@@ -193,13 +190,7 @@ rect.hclust(hc, k = 4, border = "red")
 
 ```
 
-Findings: 
-- from this plot, we find that genreHouse, genreEDM, and genreR&B cluster tightly with danceability which suggests that these genres are possibly ones that are found to be more danceable. 
-- We also find that acousticness is close to genreJazz and genreSynthwave which makes sense since they are less upbeat/electronic sounds. 
-- Surprisingly, we also see that genreTechno and genreCountry are near lyrics_sentiment which could be further investigated.
-- More importantly, we are finding that streams, genrepop, and peak position cluster which can be a suggestion that popular songs with high streams and peak positions are usually pop songs. This is pretty safe to assume since pop is a very popular genre, and this could be worth further exploring within a model to see if a song being pop influences a song to do better on charts. 
-- another important finding is that weeks on chart and energy cluster which also makes sense since higher energy songs might stay on the charts longer over less energetic songs. 
-
+Findings: - from this plot, we find that genreHouse, genreEDM, and genreR&B cluster tightly with danceability which suggests that these genres are possibly ones that are found to be more danceable. - We also find that acousticness is close to genreJazz and genreSynthwave which makes sense since they are less upbeat/electronic sounds. - Surprisingly, we also see that genreTechno and genreCountry are near lyrics_sentiment which could be further investigated. - More importantly, we are finding that streams, genrepop, and peak position cluster which can be a suggestion that popular songs with high streams and peak positions are usually pop songs. This is pretty safe to assume since pop is a very popular genre, and this could be worth further exploring within a model to see if a song being pop influences a song to do better on charts. - another important finding is that weeks on chart and energy cluster which also makes sense since higher energy songs might stay on the charts longer over less energetic songs.
 
 ## Kmeans Processing
 
@@ -207,11 +198,13 @@ Findings:
 library(tidyverse)
 library(factoextra)
 
+billboard <- music_dataset 
+tidy_billboard <- clean_names(billboard)
 
 # Kmeans work for nuermic values, so you pick the numeric values. 
 # Unsupervised, so I did not add peak.poistion
 
-billboard_numeric <- tidy_music_data %>%
+billboard_numeric <- tidy_billboard %>%
   select(streams, daily_streams, weeks_on_chart,
          lyrics_sentiment, tik_tok_virality,
          danceability, acousticness, energy)
@@ -239,7 +232,6 @@ km_result <- kmeans(billboard_scaled, centers = 2, nstart = 25)
 #nsstart = 25 random starts to find the best clustering solution 
 ```
 
-
 ```{r}
 fviz_cluster(km_result, data = billboard_scaled,
              ellipse.type = "convex",
@@ -252,8 +244,9 @@ fviz_cluster(km_result, data = billboard_scaled,
 
 ```{r}
 clusters <- kmeans(billboard_scaled, centers = 2, nstart = 25)
-billboard <- billboard |> mutate(cluster = clusters$cluster)
-billboard |> ggplot(aes(x = Daily.Streams, y = TikTok.Virality, col = as.factor(cluster))) + geom_point()
+
+tidy_billboard <- tidy_billboard |> mutate(cluster = clusters$cluster)
+tidy_billboard |> ggplot(aes(x = daily_streams, y = tik_tok_virality, col = as.factor(cluster))) + geom_point()
 ```
 
 ### Additional kmeans exploration:
@@ -280,8 +273,8 @@ billboard_clustered %>%
 
 This showed that there is no relationship associated with the variables so the kmeans does not work. It can also have to do with the fact that when clustering there is a lot of overlap between the most optimal cluster amount of 2. Additionally, in the above table, the means are closely similar to each other for each cluster. This might cause issues with create distinct clusters.
 
-
 ### Supervised Learning Models
+
 # We can make it into classificition, are they in top 10 or not
 
 ```{r}
@@ -291,10 +284,10 @@ tidy_music_data <- tidy_music_data %>%
 
 ```
 
-
 # Random Forest
 
 We're taking these out because these are not really important to our model also, peak_position will be highly correlated wit
+
 ```{r}
 tidy_music_data <- tidy_music_data[,!names(tidy_music_data) %in% c("song", "artist", "peak_position", "daily_streams")]
 ```
@@ -316,8 +309,8 @@ dim(test)
 dim(train)
 ```
 
-
 Now we are going to make our model, this chunk means to make a random forest model predicting if the song will be in top 10 using the rest of the columns in the data set with the training data.
+
 ```{r}
 
 model <- randomForest(top10 ~ ., data = train, ntree = 1000, mtry = 5)
@@ -326,13 +319,13 @@ model
 ```
 
 In this step we make our confusion matrix this hows how well the model performed on the training set. It also elps identify how often it's correctly/incorrectly classifying songs as top 10 or not.
+
 ```{r}
 model$confusion
 ```
 
+Now we use our model on the testing data set, so we can test how it well it generalizes to "new" data.
 
-
-Now we use our model on the testing data set, so we can test how it well it generalizes to "new" data. 
 ```{r}
 prediction <- predict(model, newdata = test)
 
@@ -342,6 +335,7 @@ prediction
 ```
 
 Here we see how the model did on the testing data, we see for accurate predictions over inaccurate predictions.
+
 ```{r}
 results<-cbind(prediction,test$top10)
 
@@ -356,7 +350,8 @@ results<-as.data.frame(results)
 
 sum(prediction==test$top10) / nrow(test) # The output is as shown below
 ```
-It seems that we have aorund .91% accuracy with this model we can extract the variables that may lead to this high accuracy. We can see which variables using the importance() function as well as using the varImpPlot. The varImpPlot 
+
+It seems that we have aorund .91% accuracy with this model we can extract the variables that may lead to this high accuracy. We can see which variables using the importance() function as well as using the varImpPlot. The varImpPlot
 
 ```{r}
 # Get variable importance
@@ -368,15 +363,12 @@ varImpPlot(model)
 
 We can see that in this plot different variables carry different importance. On the x-axis we have MeanDecreaseGini which shows how much each variable improves the purity of the decision trees in the forest. Higher values of MeanDecreaseGini indicates greater importance because For each variable, we track how much it helps reduce impurity on average across all the trees in the forest.The more a variable helps split the data into purer groups, the higher its MeanDecreaseGini.
 
-
 ```{r}
 imp <- importance(model)
 top_features <- rownames(imp)[order(imp[, "MeanDecreaseGini"], decreasing = TRUE)[1:5]]
 top_features
 
 ```
-
-
 
 ```{r}
 library(randomForest)
@@ -400,16 +392,16 @@ ggplot(imp_df, aes(x = MeanDecreaseGini, y = reorder(Variable, MeanDecreaseGini)
   theme_minimal()
 
 ```
+
 From the plot and from what is shown above, we can see that streams is by far the most important variable, since it has a MeanDecreaseGini of 95.Then we have lyric_sentiment being the next most important variable, since it has a MeanDecreaseGini of around 82%. Danceability and the number of weeks that the song is on the chart are the next most important variables with about 77 MeanDecreaseGini then. Then tiktok virality is next with about 76% MeanDecreaseGini.
 
-On the other hand, variables like genre and release_year show much lower MeanDecreaseGini values, indicating that they contribute relatively little to the model’s ability to classify Top 10 songs accurately. 
+On the other hand, variables like genre and release_year show much lower MeanDecreaseGini values, indicating that they contribute relatively little to the model's ability to classify Top 10 songs accurately.
 
-The model suggests that emotional tone, how danceable a track is, how long it stays on the charts, and its popularity on TikTok all play a significant role in chart success. Overall, the plot helps us identify which features are most valuable in predicting musical success. 
+The model suggests that emotional tone, how danceable a track is, how long it stays on the charts, and its popularity on TikTok all play a significant role in chart success. Overall, the plot helps us identify which features are most valuable in predicting musical success.
 
+Next steps: Maybe look into daily streams/streams? pick one instead of other\
+\# Logistic Regression
 
-
-Next steps: Maybe look into daily streams/streams? pick one instead of other  
-# Logistic Regression
 ```{r}
 library(rsample)
 library(dplyr)
@@ -446,4 +438,3 @@ test$predicted_class <- ifelse(test$predicted_prob > 0.5, 1, 0)
 ```
 
 # Gradient Boosting
-
