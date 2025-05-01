@@ -2,7 +2,6 @@
 title: "Final Project"
 format: html
 author: Nicole Sanchez Flores, Vanessa Pliego, Debora Camacho, Kimberly By Goytia, Ari Cross
-date: "`r format(Sys.Date(), '%B %d, %Y')`"
 ---
 
 # Overview
@@ -44,7 +43,7 @@ plot(hc, main = "Hierarchical Clustering")
 ```
 
 We used K-means clustering to further investigate how songs can be grouped into clusters based on their attributes:
-![Cluster Plot](https://github.com/NicoleSanchezFlores/SDS-293-Billboard-Top-100/blob/main/Clusterplot.png?raw=true)
+![Cluster Plot](https://raw.githubusercontent.com/NicoleSanchezFlores/SDS-293-Billboard-Top-100/main/images/Clusterplot.png)
 
 ```r
 km_result <- kmeans(billboard_scaled, centers = 2, nstart = 25)
@@ -84,7 +83,7 @@ accuracy <- sum(prediction == test$top10) / nrow(test)
 accuracy
 ```
 
-![Random Forest](https://github.com/NicoleSanchezFlores/SDS-293-Billboard-Top-100/blob/main/Randomforest.png?raw=true)
+![Random Forest Image](https://raw.githubusercontent.com/NicoleSanchezFlores/SDS-293-Billboard_Top-100/refs/heads/main/images/Randomforest.png)
 
 
 ## Gradient Boosting
@@ -105,3 +104,15 @@ rmse
 # Conclusion
 
 The Random Forest model performed well in predicting whether a song would make it to the top 10, with an accuracy of around 91%. We identified key predictors such as streams, danceability, and tik_tok_virality as influential features in determining chart success. Other models, such as Logistic Regression, did not perform as well, highlighting the complexity of predicting top 10 rankings.
+
+
+### Team Members:
+
+## Developers
+
+- [Nicole Sanchez Flores](https://github.com/NicoleSanchezFlores)
+- [Debora Camacho](https://github.com/dmcam02)
+- [Vanessa Pliego](https://github.com/vpliego)
+- [Kimberly By Goytia ](https://github.com/kbygoytia)
+- [Ari Cross](https://github.com/Anelra)
+
