@@ -44,7 +44,7 @@ plot(hc, main = "Hierarchical Clustering")
 ```
 
 We used K-means clustering to further investigate how songs can be grouped into clusters based on their attributes:
-![Cluster Plot](https://github.com/nicolesanchezflores/SDS-293-Billboard-Top-100/blob/main/Clusterplot.png?raw=true)
+![Cluster Plot](https://github.com/NicoleSanchezFlores/SDS-293-Billboard-Top-100/blob/main/Clusterplot.png?raw=true)
 
 ```r
 km_result <- kmeans(billboard_scaled, centers = 2, nstart = 25)
@@ -84,7 +84,7 @@ accuracy <- sum(prediction == test$top10) / nrow(test)
 accuracy
 ```
 
-![Random Forest](https://github.com/nicolesanchezflores/SDS-293-Billboard-Top-100/blob/main/Randomforest.png?raw=true)
+![Random Forest](https://github.com/NicoleSanchezFlores/SDS-293-Billboard-Top-100/blob/main/Randomforest.png?raw=true)
 
 
 ## Gradient Boosting
