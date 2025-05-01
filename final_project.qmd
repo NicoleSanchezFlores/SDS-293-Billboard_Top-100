@@ -309,7 +309,7 @@ dim(test)
 dim(train)
 ```
 
-Now we are going to make our model, this chunk means to make a random forest model predicting if the song will be in top 10 using the rest of the columns in the data set with the training data.
+Now we are going to make our model, this chunk means to make a random forest model
 
 ```{r}
 
