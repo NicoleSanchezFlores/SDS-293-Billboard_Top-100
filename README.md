@@ -1,9 +1,3 @@
----
-title: "Final Project"
-format: html
-author: Nicole Sanchez Flores, Vanessa Pliego, Debora Camacho, Kimberly By Goytia, Ari Cross
----
-
 # Overview
 
 In this project, we perform an exploratory data analysis (EDA) and model the **Billboard Top Songs** dataset. This dataset contains information about 5,000 songs, including features such as song title, artist, streams, danceability, and more. We explore the relationships between different song features, perform unsupervised learning (e.g., hierarchical clustering and K-means), and build supervised learning models to predict whether a song will make the Top 10 chart.
@@ -43,7 +37,7 @@ plot(hc, main = "Hierarchical Clustering")
 ```
 
 We used K-means clustering to further investigate how songs can be grouped into clusters based on their attributes:
-![Cluster Plot](https://raw.githubusercontent.com/NicoleSanchezFlores/SDS-293-Billboard-Top-100/main/images/Clusterplot.png)
+![Cluster Plot](https://raw.githubusercontent.com/NicoleSanchezFlores/SDS-293-Billboard_Top-100/refs/heads/main/images/Clusterplot.png)
 
 ```r
 km_result <- kmeans(billboard_scaled, centers = 2, nstart = 25)
